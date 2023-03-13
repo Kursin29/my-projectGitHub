@@ -1,54 +1,73 @@
-const searchInput = document.querySelector("input");
-const autocomplete = document.querySelector(".autocomplete");
-const repositoriesList = document.querySelector(".repositories");
+const input = document.querySelector('input');
+const autocomplete = document.querySelector('.autocomplete');
+const repositoriesList = document.querySelector('.repositories');
 
-let debounceTimer;
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      func.apply(null, args);
+    }, delay);
+  };
+};
 
-function debounce(func, delay) {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => func(), delay);
-}
+const getRepositories = async (query) => {
+  const response = await fetch(`https://api.github.com/search/repositories?q=${query}&per_page=5`);
+  const data = await response.json();
+  return data.items;
+};
 
-async function getRepositories(searchTerm) {
-  try {
-    const response = await fetch(
-      `https://api.github.com/search/repositories?q=${searchTerm}&per_page=5`
-    );
-    const data = await response.json();
-    return data.items;
-  } catch (error) {
-    console.error(error);
+const clearAutocomplete = () => {
+  while (autocomplete.firstChild) {
+    autocomplete.removeChild(autocomplete.firstChild);
   }
-}
+};
 
-function showAutocomplete(repositories) {
-    const autocomplete = document.querySelector('.autocomplete');
-    autocomplete.innerHTML = '';
-    repositories.slice(0, 5).forEach((repository) => {
+const renderAutocomplete = (repositories) => {
+  clearAutocomplete();
+  repositories.forEach((repository) => {
     const li = document.createElement('li');
-    li.textContent = repository.name;
+    li.textContent = repository.full_name;
     li.addEventListener('click', () => {
-    addRepository(repository);
-    clearInput();
+      addRepository(repository);
+      clearAutocomplete();
+      input.value = '';
     });
     autocomplete.appendChild(li);
-    });
-    }
+  });
+};
 
-function showRepositories(repositories) {
-    const repositoriesList = document.querySelector('.repositories');
-    repositoriesList.innerHTML = '';
-        
-    repositories.forEach((repository) => {
-    const li = document.createElement('li');
-    li.textContent = `${repository.name} - ${repository.owner.login} - ${repository.stargazers_count} stars;`
-    const button = document.createElement('button');
-button.textContent = 'Remove';
-button.addEventListener('click', () => {
-  removeRepository(repository);
-});
+const searchRepositories = debounce(async () => {
+  const query = input.value.trim();
+  if (query) {
+    const repositories = await getRepositories(query);
+    renderAutocomplete(repositories);
+  } else {
+    clearAutocomplete();
+  }
+}, 300);
 
-li.appendChild(button);
-repositoriesList.appendChild(li);
-});
-}
+const addRepository = (repository) => {
+  const li = document.createElement('li');
+  const title = document.createElement('h2');
+  title.textContent = repository.name;
+  const owner = document.createElement('p');
+  owner.textContent = `Owner: ${repository.owner.login}`;
+  const stars = document.createElement('p');
+  stars.textContent = `Stars: ${repository.stargazers_count}`;
+  const button = document.createElement('button');
+  button.textContent = 'Remove';
+  button.addEventListener('click', () => {
+    li.remove();
+  });
+  li.appendChild(title);
+  li.appendChild(owner);
+  li.appendChild(stars);
+  li.appendChild(button);
+  repositoriesList.appendChild(li);
+};
+
+input.addEventListener('input', searchRepositories);
