@@ -49,3 +49,78 @@
 .repository button {
   cursor: pointer;
 }
+
+.comments-block {
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.comments-block h3 {
+  margin-top: 0;
+}
+
+.comments-block form div {
+  margin-bottom: 10px;
+}
+
+.comments-block label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.comments-block input[type="text"],
+.comments-block textarea {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.comments-block input[type="submit"],
+.comments-block button[type="submit"] {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.comments-block input[type="submit"]:hover,
+.comments-block button[type="submit"]:hover {
+  background-color: #0062cc;
+}
+
+.comments-block .error-message {
+  color: red;
+  font-size: 0.8em;
+  margin-left: 5px;
+}
+
+.comments-block .comment {
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+.comments-block .comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.comments-block .comment-header .delete-button {
+  cursor: pointer;
+}
+
+.comments-block .comment-text {
+  margin-bottom: 5px;
+}
+
+.comments-block .like-button {
+  cursor: pointer;
+}
