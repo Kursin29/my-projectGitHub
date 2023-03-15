@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GitHub Repositories</title>
-    <link rel="stylesheet" href="/index.css" />
+    <link rel="stylesheet" href="./index.css" />
 </head>
 
 <body>
@@ -16,31 +16,18 @@
         </div>
         <ul class="repositories"></ul>
     </div>
-
-    <div class="comments-block">
-        <h3>Комментарии</h3>
-
-        <form id="add-comment-form">
-            <div>
-                <label for="name-input">Имя</label>
-                <input type="text" id="name-input" name="name" required>
-                <span class="error-message" id="name-error"></span>
-            </div>
-            <div>
-                <label for="comment-input">Комментарий</label>
-                <textarea id="comment-input" name="comment" required></textarea>
-                <span class="error-message" id="comment-error"></span>
-            </div>
-            <div>
-                <label for="date-input">Дата</label>
-                <input type="text" id="date-input" name="date">
-            </div>
-            <button type="submit" id="add-comment-button">Добавить комментарий</button>
-        </form>
-
-        <ul id="comments-list">
-
-        </ul>
+    <div id="comments-section">
+        <div id="comments-list"></div>
+        <div id="comment-form">
+            <h3>Оставить комментарий</h3>
+            <form>
+                <label for="comment">Комментарий:</label><br>
+                <textarea id="comment" name="comment" required></textarea><br>
+                <label for="name">Имя:</label><br>
+                <input type="text" id="name" name="name" required><br><br>
+                <input type="submit" value="Отправить">
+            </form>
+        </div>
     </div>
 
     <script src="./index.js"></script>
