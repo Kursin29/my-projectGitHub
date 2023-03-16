@@ -38,7 +38,7 @@ function addComment(name, comment, date, id) {
   const likeButton = document.createElement('button');
   likeButton.textContent = '❤️';
   likeButton.addEventListener('click', () => {
-    likeComment(id);
+    toggleLike(id);
   });
   commentActionsDiv.appendChild(likeButton);
 
@@ -52,13 +52,18 @@ function addComment(name, comment, date, id) {
   commentDiv.appendChild(commentActionsDiv);
 }
 
-function likeComment(id) {
+function toggleLike(id) {
   const commentDiv = document.querySelector(`.comment[data-id="${id}"]`);
   const likeButton = commentDiv.querySelector('button:first-of-type');
-  const likesSpan = document.createElement('span');
-  likesSpan.textContent = '1';
-  likesSpan.classList.add('likes');
-  likeButton.replaceWith(likesSpan);
+  let likesSpan = commentDiv.querySelector('.likes');
+  if (!likesSpan) {
+    likesSpan = document.createElement('span');
+    likesSpan.textContent = '1';
+    likesSpan.classList.add('likes');
+    likeButton.after(likesSpan);
+  } else {
+    likesSpan.remove();
+  }
 }
 
 function deleteComment(id) {
