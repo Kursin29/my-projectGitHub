@@ -88,21 +88,21 @@ function formatTime(time) {
   }
 }
 
-function addComment(name, comment, time, id) {
+function addComment(name, comment, date, id) {
   const commentDiv = document.createElement('div');
   commentDiv.classList.add('comment');
   commentDiv.dataset.id = id;
 
   const nameSpan = document.createElement('span');
-  const timeSpan = document.createElement('span');
+  const dateSpan = document.createElement('span');
   const commentP = document.createElement('p');
 
   nameSpan.textContent = name + ': ';
-  timeSpan.textContent = formatTime(time);
+  dateSpan.textContent = formatTime(date);
   commentP.textContent = comment;
 
   commentDiv.appendChild(nameSpan);
-  commentDiv.appendChild(timeSpan);
+  commentDiv.appendChild(dateSpan);
   commentDiv.appendChild(commentP);
   commentsList.appendChild(commentDiv);
 
@@ -112,7 +112,7 @@ function addComment(name, comment, time, id) {
   const likeButton = document.createElement('button');
   likeButton.textContent = '❤️';
   likeButton.addEventListener('click', () => {
-    likeComment(id);
+    toggleLike(id);
   });
   commentActionsDiv.appendChild(likeButton);
 
@@ -125,13 +125,19 @@ function addComment(name, comment, time, id) {
 
   commentDiv.appendChild(commentActionsDiv);
 }
-function likeComment(id) {
+
+function toggleLike(id) {
   const commentDiv = document.querySelector(`.comment[data-id="${id}"]`);
   const likeButton = commentDiv.querySelector('button:first-of-type');
-  const likesSpan = document.createElement('span');
-  likesSpan.textContent = '1';
-  likesSpan.classList.add('likes');
-  likeButton.replaceWith(likesSpan);
+  let likesSpan = commentDiv.querySelector('.likes');
+  if (!likesSpan) {
+    likesSpan = document.createElement('span');
+    likesSpan.textContent = '1';
+    likesSpan.classList.add('likes');
+    likeButton.after(likesSpan);
+  } else {
+    likesSpan.remove();
+  }
 }
 
 function deleteComment(id) {
@@ -146,7 +152,8 @@ commentForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const comment = document.getElementById('comment').value;
   const name = document.getElementById('name').value;
-  const time = new Date().toISOString();
-  addComment(name, comment, time, commentId++);
+  const dateInput = document.getElementById('date');
+  const dateValue = dateInput.value ? new Date(dateInput.value).toISOString() : new Date().toISOString();
+  addComment(name, comment, dateValue, commentId++);
   commentForm.reset();
 });
