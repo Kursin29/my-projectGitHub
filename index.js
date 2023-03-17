@@ -74,21 +74,26 @@ input.addEventListener('input', searchRepositories);
 
 const commentsList = document.getElementById('comments-list');
 
-function formatTime(time) {
+function formatTime(createdAt) {
   const today = new Date();
-  const date = new Date(time);
+  const date = new Date(createdAt);
   const diffTime = Math.abs(today - date);
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
   if (diffDays === 0) {
-    return 'сегодня ' + date.toLocaleTimeString();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return `сегодня ${hours}:${minutes}`;
   } else if (diffDays === 1) {
-    return 'вчера ' + date.toLocaleTimeString();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return `вчера ${hours}:${minutes}`;
   } else {
-    return date.toLocaleString();
+    return date.toLocaleDateString();
   }
 }
 
-function addComment(name, comment, date, id) {
+function addComment(name, comment, createdAt, id) {
   const commentDiv = document.createElement('div');
   commentDiv.classList.add('comment');
   commentDiv.dataset.id = id;
@@ -98,7 +103,7 @@ function addComment(name, comment, date, id) {
   const commentP = document.createElement('p');
 
   nameSpan.textContent = name + ': ';
-  dateSpan.textContent = formatTime(date);
+  dateSpan.textContent = formatTime(createdAt);
   commentP.textContent = comment;
 
   commentDiv.appendChild(nameSpan);
@@ -153,7 +158,14 @@ commentForm.addEventListener('submit', (event) => {
   const comment = document.getElementById('comment').value;
   const name = document.getElementById('name').value;
   const dateInput = document.getElementById('date');
-  const dateValue = dateInput.value ? new Date(dateInput.value).toISOString() : new Date().toISOString();
-  addComment(name, comment, dateValue, commentId++);
+  const selectedDate = new Date(dateInput.value);
+  const today = new Date();
+  let createdAt = today;
+
+  if (!isNaN(selectedDate) && selectedDate <= today) {
+    createdAt = selectedDate;
+  }
+  
+  addComment(name, comment, createdAt, commentId++);
   commentForm.reset();
 });
