@@ -85,8 +85,8 @@ function formatTime(createdAt) {
     const minutes = date.getMinutes();
     return `сегодня ${hours}:${minutes}`;
   } else if (diffDays === 1) {
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
+    const hours = today.getHours();
+    const minutes = today.getMinutes();
     return `вчера ${hours}:${minutes}`;
   } else {
     return date.toLocaleDateString();
@@ -160,6 +160,12 @@ commentForm.addEventListener('submit', (event) => {
   const dateInput = document.getElementById('date');
   const selectedDate = new Date(dateInput.value);
   const today = new Date();
+  
+  if (selectedDate > today) {
+    alert('Выбрана неверная дата');
+    return;
+  }
+  
   let createdAt = today;
 
   if (!isNaN(selectedDate) && selectedDate <= today) {
